@@ -71,6 +71,22 @@ pub fn grad(
     }
 }
 
+pub fn jac_mat(
+    f_in: &impl Fn(DMatrix<f32>) -> DMatrix<f32>,
+    x0: &DMatrix<f32>,
+    eps: f32,
+    ) -> DiffResult<DMatrix<f32>> {
+    let n = x0.ncols();
+    let mut res = DMatrix::repeat(n, n, 0.0);
+    for j in 0..n {
+        let f1 = |x| f_in(x)[j];
+        for i in 0..n {
+                res[(i,j)] = partial_der(&f1, x0, eps, i).unwrap();
+            }
+        }
+    Ok(res)
+}
+
 #[cfg(test)]
 mod tests {
     use super::*;
@@ -117,5 +133,9 @@ mod tests {
             )
             .unwrap()
         );
+    }
+    #[test]
+    fn test_jac_mat() {
+
     }
 }

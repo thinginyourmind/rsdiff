@@ -1,8 +1,10 @@
-use std::cmp::Ordering;
 use nalgebra::DMatrix;
+use std::cmp::Ordering;
 use std::fmt;
 #[derive(Debug)]
-pub struct ApproxEqError{ d: f32 }
+pub struct ApproxEqError {
+    d: f32,
+}
 
 impl fmt::Display for ApproxEqError {
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
@@ -13,8 +15,8 @@ impl fmt::Display for ApproxEqError {
 pub fn approx_eq(v1: f32, v2: f32, tol: f32) -> Result<f32, ApproxEqError> {
     match (v1 - v2).abs() {
         d if d <= tol => Ok(d),
-        d if d > tol => Err(ApproxEqError{d}),
-        _ => Err(ApproxEqError{d: 0.0}),
+        d if d > tol => Err(ApproxEqError { d }),
+        _ => Err(ApproxEqError { d: 0.0 }),
     }
 }
 
@@ -32,10 +34,9 @@ pub fn approx_eq_mat(v1: &DMatrix<f32>, v2: &DMatrix<f32>, tol: f32) -> Result<f
             }
             Ok(total_error / (v1.ncols() as f32) / (v1.nrows() as f32))
         }
-        _ => Err(ApproxEqError{d: 0.0}),
+        _ => Err(ApproxEqError { d: 0.0 }),
     }
 }
-
 
 #[cfg(test)]
 mod tests {
